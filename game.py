@@ -31,13 +31,13 @@ class Player(GameSprite):
             self.rect.y -= self.speed
         if keys[K_DOWN] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
-
-class Enemy(GameSprite):
+f=1
+class Mana(GameSprite):
     def __init__(self, player_image, player_x, player_y, size_x, size_y, player_speed, side='left'):
         GameSprite.__init__(self, player_image, player_x, player_y, size_x, size_y, player_speed)        
         self.side = side
     def update(self):
-        global side
+        global side,f
         if self.rect.x <= 470:
             self.side = "right"
         if self.rect.x >= win_width - 85:
@@ -61,6 +61,11 @@ clock = time.Clock()
 FPS = 60
 game = True 
 final = False
+game_over=""
+mixer.init()
+c_count = 0
+o_chest = False
+k_door = False
 
 while game:
     for e in event.get():
@@ -69,6 +74,86 @@ while game:
     if final!=True:
         window.blit(background,(0,0))
         player.reset()
+
+        for monster in monsters:
+            monster.update()
+
+        for r in blocks_r:
+            if sprite.collide_rect(hero, r):
+                hero.rect.x = r.rect.x + hero.width
+            for monster in monsters:
+                if sprite.collide_rect(monster, r):
+                    monster.side = "left"
+
+        for l in blocks_l:
+            if sprite.collide_rect(hero, r):
+                hero.rect.x = r.rect.x - hero.width
+            for monster in monsters:
+                if sprite.collide_rect(monster, r):
+                    monster.side = "right"
+        hero.update1()
+
+        for s in stairs:
+            if sprite.collide_rect(hero, s):
+                hero.update2()
+
+                if hero.rect.y <= (s.rect.y - 40):
+                    hero.rect.y = s.rect.y - 40
+
+                if hero.rect.y <= (s.rect.y + 200):
+                    hero.rect.y = s.rect.y +200
+
+        mana.update()
+    keys = key.get_pressed()
+    if keys[K_SPACE]:
+        mana.rect.x=hero.rect.centerx
+        mana.rect.y=hero.rect.top
+        if f==1:
+            mana.side = "left"
+        if f==0:
+            mana.side = "right"
+        manas.add(mana)
+        items.add(mana)
+
+    for c in coins:
+        if sprite.collide_rect(hero, c):
+            c_count +- 1
+            coins.remove(c)
+            items.remove(c)
+    if sprite.collide_rect(hero,t) and c_count==2:
+        keys = key.get_pressed()
+        if Keys[K_e]:
+            c_count += 10
+            items.remove(t)
+    if sprite.collide_rect(hero,key_k):
+        keys = key.get_pressed()
+        if Keys[K_e]:
+            k_door=True
+            items.remove(key_k)
+
+    if sprite.collide_rect(hero,door) and k_door:
+        game_over="win"
+        finish=False
+
+    for monster in monsters:
+        if sprite.spritecollide(monster, manas, True)
+        monster.rect.y = -150
+        manas.remove(mana)
+    if sprite.collide.rect(hero, monster):
+        game_over="lose"
+        finish=False
+
+coin_c = font2.render("coins: " + str(c_count), True,(245,249,128))
+window.blit(coin_c, (40, 0))
+
+if game_over=="win":
+    window.fill((0,0,0))
+    window.blit(win, (400,300))
+elif game_over=="lose":
+    window.fill((0,0,0))
+    window.blit(lose, (400,300))
+display.update()
+clock.tick(FPS)
 
     display.update()
     clock.tick(FPS)
