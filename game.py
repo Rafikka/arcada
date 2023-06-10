@@ -143,17 +143,17 @@ while game:
         game_over="lose"
         finish=False
 
-coin_c = font2.render("coins: " + str(c_count), True,(245,249,128))
-window.blit(coin_c, (40, 0))
+    coin_c = font2.render("coins: " + str(c_count), True,(245,249,128))
+    window.blit(coin_c, (40, 0))
 
-if game_over=="win":
-    window.fill((0,0,0))
-    window.blit(win, (400,300))
-elif game_over=="lose":
-    window.fill((0,0,0))
-    window.blit(lose, (400,300))
-display.update()
-clock.tick(FPS)
-
+    if game_over=="win":
+        window.fill((0,0,0))
+        window.blit(win, (400,300))
+    elif game_over=="lose":
+        window.fill((0,0,0))
+        window.blit(lose, (400,300))
     display.update()
     clock.tick(FPS)
+
+        display.update()
+        clock.tick(FPS)
